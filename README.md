@@ -1,5 +1,8 @@
-# ⚒️ ForgeHook 🎣
-Hook script for randomizing hardware values in VMID.conf
+# ⚒️ ForgeHook 🎣  
+A hook script for randomizing hardware values in `VMID.conf`.  
+Simple to use, flexible to customize, and easy to extend.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  
 # 🔧 Flexible Hook Script for Random HWID
 
@@ -152,6 +155,11 @@ scsi0: ... ,ssd=1
 
 4. Save the file.  
 5. Start the VM. The script will stop & restart it once more, applying a new HWID.
+
+💡 **Note (Future improvement):**  
+In the future, I plan to add a function that references existing configuration points already available in the PVE web interface.  
+This will allow adjustments without directly editing the `VMID.conf` file,  
+making the workflow easier and more convenient than manually opening and modifying the file.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
