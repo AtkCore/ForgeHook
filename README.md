@@ -183,6 +183,13 @@ I’d like to take a moment to thank the people whose work and ideas inspired Fo
 
 ---
 
+✨ And to everyone I haven’t mentioned by name:  
+your contributions have been just as valuable.  
+Each idea, patch, and shared insight has helped this community grow stronger together —  
+and made it a place where learning and creativity can also be fun. 🙌
+
+---
+
 💡 This is my very first GitHub project.  
 If anything looks unusual, please forgive me — I’m still learning, and I used Google Translate to help with the English wording.  
 
