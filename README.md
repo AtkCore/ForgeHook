@@ -1,6 +1,11 @@
 # ⚒️ ForgeHook 🎣  
 A hook script for randomizing hardware values in `VMID.conf`.  
-Simple to use, flexible to customize, and easy to extend.
+Easy to use, flexible to customize, and simple to extend.  
+
+It’s a straightforward idea that makes use of the existing Hook feature in PVE to provide more value.  
+You’re welcome to adapt, modify, or integrate it into your own projects as you like.  
+
+If this helps make the PVE community better, I’ll be more than happy. 🙏
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  
