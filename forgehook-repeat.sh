@@ -88,20 +88,27 @@ if [[ "$PHASE" == "pre-start" ]]; then
     SERIAL_MB=$(randstr 10)
     SERIAL_CPU=$(randstr 10)
     SERIAL_SYS=$(randstr 12)
+    BIOS_DATE=$(date +'%m/%d/%Y')
+
+    # Get manufacturer and version from dmidecode (type 4) because you are using host passthrough.
+    DMIDECODE_MANUFACTURER=$(dmidecode -t 4 | grep 'Manufacturer:' | head -n1 | awk -F': ' '{print $2}')
+    DMIDECODE_VERSION=$(dmidecode -t 4 | grep 'Version:' | head -n1 | awk -F': ' '{print $2}')
+    DMIDECODE_SOCKET=$(dmidecode -t 4 | grep 'Upgrade: Socket ' | head -n1 | sed 's/Upgrade: Socket //' | xargs)
+    DMIDECODE_MAX_SPEED=$(dmidecode -t 4 | grep 'Max Speed:' | head -n1 | awk -F': ' '{print $2}' | awk '{print $1}')
+    DMIDECODE_CUR_SPEED=$(dmidecode -t 4 | grep 'Current Speed:' | head -n1 | awk -F': ' '{print $2}' | awk '{print $1}')
+    DMIDECODE_ASSET=$(dmidecode -t 4 | grep 'Asset Tag:' | head -n1 | awk -F': ' '{print $2}' | xargs)
+    DMIDECODE_PART=$(dmidecode -t 4 | grep 'Part Number:' | head -n1 | awk -F': ' '{print $2}' | xargs)
 
     # Add args in VMID.conf
     sed -i '/^args:/d' "$CONF"
-    ARGS="-acpitable file=/root/ssdt.aml -acpitable file=/root/ssdt-ec.aml -acpitable file=/root/hpet.aml"
-    ARGS+=" -cpu host,hypervisor=off,vmware-cpuid-freq=false,enforce=false,host-phys-bits=true"
-    ARGS+=" -smbios type=0,vendor=\"$BIOS_VENDOR\",version=2.10,date='03/06/2024'"
-    ARGS+=" -smbios type=1,manufacturer=\"${MBD_NAME%% *}\",product=\"$MBD_NAME\",version=$BIOS_VERSION,serial=\"$SERIAL_SYS\",sku=\"X99SKU\",family=\"X99FAMILY\""
-    ARGS+=" -smbios type=2,manufacturer=\"${MBD_NAME%% *}\",product=\"$MBD_NAME\",version=$BIOS_VERSION,serial=\"$SERIAL_MB\",asset=\"X99Asset\",location=\"Slot0\""
-    ARGS+=" -smbios type=3,manufacturer=\"${MBD_NAME%% *}\",version=$BIOS_VERSION,serial=\"$SERIAL_MB\",asset=\"CHASSIS123\",sku=\"CHSK123\""
-    ARGS+=" -smbios type=4,sock_pfx=\"LGA2011-3\",manufacturer=\"Intel(R) Corporation\",version=\"Intel(R) Xeon(R) CPU E5-2697 v4 @ 2.30GHz\",max-speed=3600,current-speed=2300,serial=\"$SERIAL_CPU\",asset=\"CPUASSET\",part=\"E5-2697v4\""
+    ARGS="-acpitable file=/root/ssdt.aml -acpitable file=/root/ssdt-ec.aml -acpitable file=/root/hpet.aml -cpu host,hypervisor=off,vmware-cpuid-freq=false,enforce=false,host-phys-bits=true"
+    ARGS+=" -smbios type=0,vendor=\"$BIOS_VENDOR\",version=1.0,date='$BIOS_DATE'"
+    ARGS+=" -smbios type=1,manufacturer=\"${MBD_NAME%% *}\",product=\"$MBD_NAME\",version=$BIOS_VERSION,serial=\"$SERIAL_SYS\",sku=\"Default string\",family=\"Default string\""
+    ARGS+=" -smbios type=2,manufacturer=\"${MBD_NAME%% *}\",product=\"$MBD_NAME\",version=$BIOS_VERSION,serial=\"$SERIAL_MB\",asset=\"Default string\",location=\"Slot0\""
+    ARGS+=" -smbios type=3,manufacturer=\"${MBD_NAME%% *}\",version=$BIOS_VERSION,serial=\"$SERIAL_MB\",asset=\"Default string\",sku=\"Default string\""
+    ARGS+=" -smbios type=4,sock_pfx=\"$DMIDECODE_SOCKET\",manufacturer=\"$DMIDECODE_MANUFACTURER\",version=\"$DMIDECODE_VERSION\",max-speed=$DMIDECODE_MAX_SPEED,current-speed=$DMIDECODE_CUR_SPEED,serial=\"$SERIAL_CPU\",asset=\"$DMIDECODE_ASSET\",part=\"$DMIDECODE_PART\""
     ARGS+=" -smbios type=17,loc_pfx=\"DIMM_C1\",manufacturer=\"$RAM_BRAND\",speed=$RAM_SPEED,serial=$RAM_SERIAL,part=\"$RAM_PART\",bank=\"NODE1\",asset=\"$ASSET_RAM\""
-    ARGS+=" -smbios type=11,value=\"$(randstr 10)\""
-    ARGS+=" -smbios type=8"
-    ARGS+=" -smbios type=8"
+    ARGS+=" -smbios type=9 -smbios type=8"
     echo "args: $ARGS" >> "$CONF"
 
     # Add + Random smbios in VMID.conf
